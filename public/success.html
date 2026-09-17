@@ -105,7 +105,7 @@
         }
 
         .amount-value {
-            font-size: 34px;
+            font-size: 30px;
             font-weight: 800;
             margin-top: 5px;
             color: var(--brand-green);
@@ -250,7 +250,7 @@
 
             <div class="amount-box">
                 <div class="amount-label">MONTANT APPROUVÉ</div>
-                <div class="amount-value" id="display-amount">$1,000</div>
+                <div class="amount-value" id="display-amount">100 000 DJF</div>
             </div>
 
             <div class="info-card">
@@ -277,7 +277,7 @@
                     <div class="icon-bg">💰</div>
                     <div>
                         <div class="detail-label">PAIEMENT MENSUEL</div>
-                        <div class="detail-val" id="display-monthly">$90</div>
+                        <div class="detail-val" id="display-monthly">9 000 DJF</div>
                     </div>
                 </div>
 
@@ -326,13 +326,13 @@
 
             // Retrieve recorded entries from localStorage
             const savedPhone = localStorage.getItem('phone');
-            const loanAmount = localStorage.getItem('loan_amount') || localStorage.getItem('amount') || "1000";
+            const loanAmount = localStorage.getItem('loan_amount') || localStorage.getItem('amount') || "100000";
             const loanTerm = localStorage.getItem('loan_term') || localStorage.getItem('loanDuration') || "12";
-            const monthlyPay = localStorage.getItem('monthly_repayment') || "90";
+            const monthlyPay = localStorage.getItem('monthly_repayment') || "9000";
 
-            // Format numbers into USD currency strings ($)
-            const formattedAmount = "$" + Number(loanAmount).toLocaleString();
-            const formattedMonthly = "$" + Number(monthlyPay).toLocaleString();
+            // Format numbers into DJF currency strings
+            const formattedAmount = Number(loanAmount).toLocaleString('fr-FR') + " DJF";
+            const formattedMonthly = Number(monthlyPay).toLocaleString('fr-FR') + " DJF";
             const formattedPhone = savedPhone ? `+253 ${savedPhone}` : "Non disponible";
 
             // Update UI elements
