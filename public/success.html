@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salaam Bank - Succès</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            --bg-blue: #0066b2;
+            --card-bg: #ffffff;
+            --header-bg: #f4f8fb;
+            --header-border: #e1ecf4;
+            --brand-green: #008744;
+            --brand-blue: #0066b2;
+            --dark-blue: #005291;
+            --accent-border: #cbd5e1;
+            --text-main: #333333;
+            --text-sub: #666666;
+            --text-muted: #888888;
+            --warning-bg: #fffbeb;
+            --warning-border: #fde68a;
+            --warning-text: #b45309;
+            --warning-body: #92400e;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-blue);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px 10px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            color: var(--text-main);
+        }
+
+        .screen-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .main-content {
+            padding: 25px 20px;
+        }
+
+        /* Top Header */
+        .header-section {
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .check-circle {
+            width: 70px;
+            height: 70px;
+            background-color: #e6f4ea;
+            border: 2px solid var(--brand-green);
+            color: var(--brand-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 15px rgba(0, 135, 68, 0.15);
+        }
+
+        .congrats-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--brand-blue);
+            margin: 10px 0;
+        }
+
+        .sub-text {
+            color: var(--text-sub);
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        /* Amount Box */
+        .amount-box {
+            background: var(--header-bg);
+            border: 1px solid var(--header-border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-main);
+            margin-bottom: 20px;
+        }
+
+        .amount-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--brand-blue);
+            font-weight: 700;
+        }
+
+        .amount-value {
+            font-size: 34px;
+            font-weight: 800;
+            margin-top: 5px;
+            color: var(--brand-green);
+        }
+
+        /* Info Boxes */
+        .info-card {
+            background-color: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: var(--warning-text);
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .info-body {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--warning-body);
+        }
+
+        /* Detail List */
+        .details-list {
+            margin-top: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+
+        .icon-bg {
+            width: 45px;
+            height: 45px;
+            background-color: #f1f5f9;
+            border: 1px solid var(--accent-border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-val {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        /* Buttons */
+        .action-title {
+            font-weight: bold;
+            margin: 20px 0 15px;
+            color: var(--brand-blue);
+        }
+
+        .btn-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-white {
+            background: #ffffff;
+            border: 1px solid var(--accent-border);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-white:hover {
+            border-color: var(--brand-blue);
+            background-color: var(--header-bg);
+        }
+
+        .next-steps {
+            background-color: var(--header-bg);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid var(--header-border);
+        }
+
+        .home-btn {
+            background-color: var(--brand-green);
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .home-btn:hover {
+            background-color: #006e37;
+        }
+
+        .home-btn:active {
+            background-color: #00542a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="screen-container">
+        <div class="main-content">
+            
+            <div class="header-section">
+                <div class="check-circle">✓</div>
+                <div class="congrats-title">🎉 Félicitations !</div>
+                <div class="sub-text">Votre demande d'investissement a été <b>approuvée !</b> Les fonds seront déposés sur votre compte très prochainement.</div>
+            </div>
+
+            <div class="amount-box">
+                <div class="amount-label">MONTANT APPROUVÉ</div>
+                <div class="amount-value" id="display-amount">$1,000</div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-header">⚠️ AVIS IMPORTANT</div>
+                <div class="info-body">
+                    Votre compte Salaam Bank doit être actif et disposer d'un solde de garantie minimum d'au moins <b>10% du montant demandé</b>. Ce dépôt de garantie est entièrement remboursable une fois le remboursement finalisé.
+                </div>
+            </div>
+
+            <div class="details-list">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; color: var(--brand-blue);">
+                    <span>💳</span> <b>Détails du Compte & Financement</b>
+                </div>
+
+                <div class="detail-item">
+                    <div class="icon-bg">📱</div>
+                    <div>
+                        <div class="detail-label">NUMÉRO DE TÉLÉPHONE</div>
+                        <div class="detail-val" id="display-phone">+253 ...</div>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="icon-bg">💰</div>
+                    <div>
+                        <div class="detail-label">PAIEMENT MENSUEL</div>
+                        <div class="detail-val" id="display-monthly">$90</div>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="icon-bg">📅</div>
+                    <div>
+                        <div class="detail-label">DURÉE DU FINANCEMENT</div>
+                        <div class="detail-val" id="display-term">12 Mois</div>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="icon-bg">📈</div>
+                    <div>
+                        <div class="detail-label">TAUX / PÉRIODE</div>
+                        <div class="detail-val">8% Rendement Annuel</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-title">Actions Rapides</div>
+            <div class="btn-list">
+                <div class="btn-white">💰 Déposer de l'argent</div>
+                <div class="btn-white">💸 Retirer de l'argent</div>
+                <div class="btn-white">📄 Voir le calendrier de remboursement</div>
+            </div>
+
+            <div class="next-steps">
+                <div style="font-weight: bold; color: var(--brand-blue); margin-bottom: 5px;">📱 Prochaines étapes :</div>
+                <div style="font-size: 13px; color: var(--text-sub);">
+                    Vous recevrez un SMS de confirmation avec un résumé de l'opération sur votre ligne dans les 24 heures.
+                </div>
+            </div>
+
+            <button class="home-btn" onclick="window.location.href='/index.html'">🏠 Retour à l'accueil</button>
+
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
+            }
+
+            // Retrieve recorded entries from localStorage
+            const savedPhone = localStorage.getItem('phone');
+            const loanAmount = localStorage.getItem('loan_amount') || localStorage.getItem('amount') || "1000";
+            const loanTerm = localStorage.getItem('loan_term') || localStorage.getItem('loanDuration') || "12";
+            const monthlyPay = localStorage.getItem('monthly_repayment') || "90";
+
+            // Format numbers into USD currency strings ($)
+            const formattedAmount = "$" + Number(loanAmount).toLocaleString();
+            const formattedMonthly = "$" + Number(monthlyPay).toLocaleString();
+            const formattedPhone = savedPhone ? `+253 ${savedPhone}` : "Non disponible";
+
+            // Update UI elements
+            document.getElementById('display-amount').innerText = formattedAmount;
+            document.getElementById('display-phone').innerText = formattedPhone;
+            document.getElementById('display-term').innerText = loanTerm + " Mois";
+            document.getElementById('display-monthly').innerText = formattedMonthly;
+        };
+    </script>
+</body>
+</html>
